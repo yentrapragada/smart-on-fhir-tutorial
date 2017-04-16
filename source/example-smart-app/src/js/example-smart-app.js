@@ -26,7 +26,7 @@
         
         var imm = smart.patient.api.fetchAll({
           type: 'Immunization',
-          query:{id: '4342011'}
+          query:{id: 4342011}
         });
         
         console.log(imm);
