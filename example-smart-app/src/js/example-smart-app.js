@@ -22,19 +22,18 @@
                     }
                   });
         
-       var imm = smart.patient.api.fetchAll({
-          type: 'Immunization',
-          query:{id: '4342011'}
-        });
+       // var statinRxs = smart.api.search({type: 'MedicationOrder', query: {dateWritten: '2014-05-01', name: 'statin'}});
         
-        console.log(imm);
+        
+        //console.log(imm);
 
-        $.when(pt, obv, imm).fail(onError);
+        $.when(pt, obv).fail(onError);
 
-        $.when(pt, obv, imm).done(function(patient, obv, imm) {
+        $.when(pt, obv).done(function(patient, obv) {
           
           var byCodes = smart.byCodes(obv, 'code');
           var gender = patient.gender;
+          var id = patient.id;
           var dob = new Date(patient.birthDate);
           var day = dob.getDate();
           var monthIndex = dob.getMonth() + 1;
@@ -55,6 +54,10 @@
           var hdl = byCodes('2085-9');
           var ldl = byCodes('2089-1');
           
+          
+       
+        });
+          
           //Immunization Code
           //var measles = byCodes('05');
 //           var mumps = byCodes('07');
@@ -72,6 +75,7 @@
 //           console.log(varcella);
 
           var p = defaultPatient();
+          p.id = id;
           p.birthdate = dobStr;
           p.gender = gender;
           p.fname = fname;
@@ -114,6 +118,7 @@
 
   function defaultPatient(){
     return {
+      id: {value: ''},
       fname: {value: ''},
       lname: {value: ''},
       gender: {value: ''},
@@ -185,6 +190,7 @@
   window.drawVisualization = function(p) {
     $('#holder').show();
     $('#loading').hide();
+    $('#id').html(p.id);
     $('#fname').html(p.fname);
     $('#lname').html(p.lname);
     $('#gender').html(p.gender);
