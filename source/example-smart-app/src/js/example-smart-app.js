@@ -25,30 +25,22 @@
         
         
         //Immunization related code
-        var imm = smart.patient.api.read({
+        var imm = smart.patient.api.fetchAll({
           type: 'Immunization'
         });
         
         console.log(imm);
         
               
-        $.when(pt, obv, imm).fail(onError);
+        $.when(pt, obv).fail(onError);
 
         $.when(pt, obv, imm).done(function(patient, obv, imm) {
           var byCodes = smart.byCodes(obv, 'code');
-          //Immunization code
-          var immByCodes = smart.byCodes(imm, 'code');
-          var conByCodes = smart.byCodes(con, 'code');
           var gender = patient.gender;
           var dob = new Date(patient.birthDate);
           var day = dob.getDate();
           var monthIndex = dob.getMonth() + 1;
           var year = dob.getFullYear();
-          //Adding newly
-          console.log(imm.notGiven);
-          if(typeof patient.identifier[0] != 'undefined'){
-            var identifier = patient.identifier[0].value;
-          }
           
           var city = patient.address.city;
          
@@ -65,6 +57,7 @@
           var height = byCodes('8302-2');
           var systolicbp = getBloodPressureValue(byCodes('55284-4'),'8480-6');
           var diastolicbp = getBloodPressureValue(byCodes('55284-4'),'8462-4');
+          var imm = getImmunization(byCodes('GNVAR'));
           var hdl = byCodes('2085-9');
           var ldl = byCodes('2089-1');
          
@@ -80,7 +73,7 @@
           p.address = address;
           p.age = parseInt(calculateAge(dob));
           p.height = getQuantityValueAndUnit(height[0]);
-          p.imm = imm;
+          
 
           if (typeof systolicbp != 'undefined')  {
             p.systolicbp = systolicbp;
@@ -117,7 +110,7 @@
       diastolicbp: {value: ''},
       ldl: {value: ''},
       hdl: {value: ''},
-      imm: {value: ''}
+      
     };
   }
 
@@ -140,18 +133,23 @@
     return getQuantityValueAndUnit(formattedBPObservations[0]);
   }
   
-  
-  function displayMedication (medCodings) {
-      return getMedicationName(medCodings);
-  }
-  
-  function getMedicationName (medCodings) {
-      var coding = medCodings.find(function(c){
-      return c.system == "http://www.nlm.nih.gov/research/umls/rxnorm";
-      });
-      return coding && coding.display || "Unnamed Medication(TM)"
-  }
+  function getImmunization(immuneCode) {
+    var formattedImmune = [];
+    //console.log("BP Observations: " + BPObservations);
+     var immune = Immunization.find(function(vaccineCode){
+            return coding.code == immuneCode;
+        });
+    
+      if (immune) {
+        Immunization.valueQuantity = immune.valueQuantity;
+        formattedImmune.push(Immunization);
+      }
+    });
 
+    return getQuantityValueAndUnit(formattedImmune[0]);
+  }
+  
+  
   function isLeapYear(year) {
     return new Date(year, 1, 29).getMonth() === 1;
   }
