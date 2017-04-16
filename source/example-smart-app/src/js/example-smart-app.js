@@ -26,10 +26,10 @@
           type: 'Immunization',
           query: {
             code: {
-              $or: ['http://hl7.org/fhir/sid/cvx/07', 'http://hl7.org/fhir/sid/cvx/05', 
-                   'urn:oid:1.2.36.1.2001.1005.17/GNFLU', 'urn:oid:1.2.36.1.2001.1005.17/GNHEP',
-                   'urn:oid:1.2.36.1.2001.1005.17/GNMEA', 'urn:oid:1.2.36.1.2001.1005.17/GNRUB',
-                   'urn:oid:1.2.36.1.2001.1005.17/GNVAR']
+              $or: ['http://hl7.org/fhir/sid/cvx|07', 'http://hl7.org/fhir/sid/cvx|05', 
+                   'urn:oid:1.2.36.1.2001.1005.17/GNFLU', 'urn:oid:1.2.36.1.2001.1005.17|GNHEP',
+                   'urn:oid:1.2.36.1.2001.1005.17|GNMEA', 'urn:oid:1.2.36.1.2001.1005.17|GNRUB',
+                   'urn:oid:1.2.36.1.2001.1005.17|GNVAR']
             }
           }
         });
