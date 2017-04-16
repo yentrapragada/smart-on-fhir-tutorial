@@ -23,15 +23,7 @@
                   });
         
         var imm = smart.patient.api.fetchAll({
-          type: 'Immunization',
-          query: {
-            code: {
-              $or: ['http://hl7.org/fhir/sid/cvx|07', 'http://hl7.org/fhir/sid/cvx|05', 
-                   'urn:oid:1.2.36.1.2001.1005.17|GNFLU', 'urn:oid:1.2.36.1.2001.1005.17|GNHEP',
-                   'urn:oid:1.2.36.1.2001.1005.17|GNMEA', 'urn:oid:1.2.36.1.2001.1005.17|GNRUB',
-                   'urn:oid:1.2.36.1.2001.1005.17|GNVAR']
-            }
-          }
+          type: 'Immunization'       
         });
         
         console.log(imm);
@@ -64,19 +56,19 @@
           
           //Immunization Code
           //var measles = byCodes('05');
-          var mumps = byCodes('07');
-          var inluenza = byCodes('GNFLU');
-          var hepatitis = byCodes('GNHEP');
-          var measles = byCodes('GNMEA');
-          var rubella = byCodes('GNRUB');
-          var varcella = byCodes('GNVAR');
+//           var mumps = byCodes('07');
+//           var inluenza = byCodes('GNFLU');
+//           var hepatitis = byCodes('GNHEP');
+//           var measles = byCodes('GNMEA');
+//           var rubella = byCodes('GNRUB');
+//           var varcella = byCodes('GNVAR');
           
-          console.log(measles);
-          console.log(mumps);
-          console.log(inluenza);
-          console.log(hepatitis);
-          console.log(rubella);
-          console.log(varcella);
+//           console.log(measles);
+//           console.log(mumps);
+//           console.log(inluenza);
+//           console.log(hepatitis);
+//           console.log(rubella);
+//           console.log(varcella);
 
           var p = defaultPatient();
           p.birthdate = dobStr;
@@ -98,12 +90,14 @@
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
           
-          p.measles = measles;
-          p.mumps =  mumps;
-          p.influenza = inluenza;
-          p.hepatitis = hepatitis;
-          p.rubella = rubella;
-          p.varcella = varcella;
+//           p.measles = measles;
+//           p.mumps =  mumps;
+//           p.influenza = inluenza;
+//           p.hepatitis = hepatitis;
+//           p.rubella = rubella;
+//           p.varcella = varcella;
+          
+          
 
           ret.resolve(p);
         });
@@ -128,13 +122,13 @@
       systolicbp: {value: ''},
       diastolicbp: {value: ''},
       ldl: {value: ''},
-      hdl: {value: ''},
-      measles: {value: ''},
-      mumps: {value: ''},
-      influenza: {value: ''},
-      hepatitis: {value: ''},
-      rubella: {value: ''},
-      varcella: {value: ''}
+      hdl: {value: ''}
+//       measles: {value: ''},
+//       mumps: {value: ''},
+//       influenza: {value: ''},
+//       hepatitis: {value: ''},
+//       rubella: {value: ''},
+//       varcella: {value: ''}
     };
   }
 
@@ -200,13 +194,7 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
-    $('#measles').html(p.measles); 
-    $('#mumps').html(p.mumps);
-    $('#influenza').html(p.influenza);
-    $('#hepatitis').html(p.hepatitis);
-    $('#rubella').html(p.rubella);
-    $('#varcella').html(p.varcella);
-        
+          
   };
 
 })(window);
