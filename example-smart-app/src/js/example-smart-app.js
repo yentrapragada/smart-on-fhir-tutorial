@@ -22,8 +22,9 @@
                     }
                   });
         
-        var imm = smart.patient.api.fetchAll({
-          type: 'Immunization'       
+       var imm = smart.patient.api.fetchAll({
+          type: 'Immunization',
+          query:{id: '4342011'}
         });
         
         console.log(imm);
