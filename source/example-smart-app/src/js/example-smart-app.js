@@ -21,10 +21,25 @@
                       }
                     }
                   });
+        
+        var imm = smart.patient.api.fetchAll({
+          type: 'Immunization',
+          query: {
+            code: {
+              $or: ['http://hl7.org/fhir/sid/cvx/07', 'http://hl7.org/fhir/sid/cvx/05', 
+                   'urn:oid:1.2.36.1.2001.1005.17/GNFLU', 'urn:oid:1.2.36.1.2001.1005.17/GNHEP',
+                   'urn:oid:1.2.36.1.2001.1005.17/GNMEA', 'urn:oid:1.2.36.1.2001.1005.17/GNRUB',
+                   'urn:oid:1.2.36.1.2001.1005.17/GNVAR']
+            }
+          }
+        });
+        
+        console.log(imm);
 
-        $.when(pt, obv).fail(onError);
+        $.when(pt, obv, imm).fail(onError);
 
-        $.when(pt, obv).done(function(patient, obv) {
+        $.when(pt, obv, imm).done(function(patient, obv, imm) {
+          
           var byCodes = smart.byCodes(obv, 'code');
           var gender = patient.gender;
           var dob = new Date(patient.birthDate);
@@ -46,6 +61,22 @@
           var diastolicbp = getBloodPressureValue(byCodes('55284-4'),'8462-4');
           var hdl = byCodes('2085-9');
           var ldl = byCodes('2089-1');
+          
+          //Immunization Code
+          //var measles = byCodes('05');
+          var mumps = immByCodes('07');
+          var inluenza = immByCodes('GNFLU');
+          var hepatitis = immByCodes('GNHEP');
+          var measles = immByCodes('GNMEA');
+          var rubella = immByCodes('GNRUB');
+          var varcella = immByCodes('GNVAR');
+          
+          console.log(measles);
+          console.log(mumps);
+          console.log(inluenza);
+          console.log(hepatitis);
+          console.log(rubella);
+          console.log(varcella);
 
           var p = defaultPatient();
           p.birthdate = dobStr;
@@ -54,6 +85,7 @@
           p.lname = lname;
           p.age = parseInt(calculateAge(dob));
           p.height = getQuantityValueAndUnit(height[0]);
+          
 
           if (typeof systolicbp != 'undefined')  {
             p.systolicbp = systolicbp;
@@ -65,6 +97,13 @@
 
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
+          
+          p.measles = measles;
+          p.mumps =  mumps;
+          p.influenza = inluenza;
+          p.hepatitis = hepatitis;
+          p.rubella = rubella;
+          p.varcella = varcella;
 
           ret.resolve(p);
         });
@@ -90,6 +129,12 @@
       diastolicbp: {value: ''},
       ldl: {value: ''},
       hdl: {value: ''},
+      measles: {value: ''},
+      mumps: {value: ''},
+      influenza: {value: ''},
+      hepatitis: {value: ''},
+      rubella: {value: ''},
+      varcella: {value: ''}
     };
   }
 
@@ -155,6 +200,13 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
+    $('#measles).html(p.measles); 
+    $('#mumps).html(p.mumps);
+    $('#influenza).html(p.influenza);
+    $('#hepatitis).html(p.hepatitis);
+    $('#rubella).html(p.rubella);
+    $('#varcella).html(p.varcella);
+        
   };
 
 })(window);
