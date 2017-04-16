@@ -23,7 +23,7 @@
                   });
         
         var imm = smart.patient.api.fetchAll({
-          type: 'MedicationOrder',
+          type: 'Immunization',
           query: {
             code: {
               $or: ['http://hl7.org/fhir/sid/cvx|07', 'http://hl7.org/fhir/sid/cvx|05', 
