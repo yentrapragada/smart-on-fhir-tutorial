@@ -135,8 +135,24 @@
   
   function getImmunization(immuneCode) {
     var formattedImmune = [];
-    //console.log("BP Observations: " + BPObservations);
-     var immune = Immunization.find(function(vaccineCode){
+     BPObservations.forEach(function(observation){
+       var immune = Immunization.find(function(vaccineCode){
+            return coding.code == immuneCode;
+        });
+    
+      if (immune) {
+        Immunization.valueQuantity = immune.valueQuantity;
+        formattedImmune.push(Immunization);
+      }
+    });
+
+    return getQuantityValueAndUnit(formattedImmune[0]);
+  } 
+  
+  function getImmunization(immuneCode) {
+    var formattedImmune = [];
+     BPObservations.forEach(function(observation){
+       var immune = Immunization.find(function(vaccineCode){
             return coding.code == immuneCode;
         });
     
