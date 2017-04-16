@@ -10,6 +10,7 @@
     function onReady(smart)  {
       if (smart.hasOwnProperty('patient')) {
         var patient = smart.patient;
+         console.log(patient);
         var pt = patient.read();
         var obv = smart.patient.api.fetchAll({
                     type: 'Observation',
@@ -22,22 +23,35 @@
                     }
                   });
         
-       // var statinRxs = smart.api.search({type: 'MedicationOrder', query: {dateWritten: '2014-05-01', name: 'statin'}});
         
+        //Immunization related code
+        var imm = smart.patient.api.read({
+          type: 'Immunization'
+        });
         
-        //console.log(imm);
+        console.log(imm);
+        
+              
+        $.when(pt, obv, imm).fail(onError);
 
-        $.when(pt, obv).fail(onError);
-
-        $.when(pt, obv).done(function(patient, obv) {
-          
+        $.when(pt, obv, imm).done(function(patient, obv, imm) {
           var byCodes = smart.byCodes(obv, 'code');
+          //Immunization code
+          var immByCodes = smart.byCodes(imm, 'code');
+          var conByCodes = smart.byCodes(con, 'code');
           var gender = patient.gender;
-          var id = patient.id;
           var dob = new Date(patient.birthDate);
           var day = dob.getDate();
           var monthIndex = dob.getMonth() + 1;
           var year = dob.getFullYear();
+          //Adding newly
+          console.log(imm.notGiven);
+          if(typeof patient.identifier[0] != 'undefined'){
+            var identifier = patient.identifier[0].value;
+          }
+          
+          var city = patient.address.city;
+         
 
           var dobStr = monthIndex + '/' + day + '/' + year;
           var fname = '';
@@ -53,36 +67,20 @@
           var diastolicbp = getBloodPressureValue(byCodes('55284-4'),'8462-4');
           var hdl = byCodes('2085-9');
           var ldl = byCodes('2089-1');
-          
-          
-       
-        });
-          
-          //Immunization Code
-          //var measles = byCodes('05');
-//           var mumps = byCodes('07');
-//           var inluenza = byCodes('GNFLU');
-//           var hepatitis = byCodes('GNHEP');
-//           var measles = byCodes('GNMEA');
-//           var rubella = byCodes('GNRUB');
-//           var varcella = byCodes('GNVAR');
-          
-//           console.log(measles);
-//           console.log(mumps);
-//           console.log(inluenza);
-//           console.log(hepatitis);
-//           console.log(rubella);
-//           console.log(varcella);
+         
 
           var p = defaultPatient();
-          p.id = id;
           p.birthdate = dobStr;
           p.gender = gender;
           p.fname = fname;
           p.lname = lname;
+          //Adding newly
+          p.identifier = identifier;
+          p.telecom = telecom;
+          p.address = address;
           p.age = parseInt(calculateAge(dob));
           p.height = getQuantityValueAndUnit(height[0]);
-          
+          p.imm = imm;
 
           if (typeof systolicbp != 'undefined')  {
             p.systolicbp = systolicbp;
@@ -94,15 +92,6 @@
 
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
-          
-//           p.measles = measles;
-//           p.mumps =  mumps;
-//           p.influenza = inluenza;
-//           p.hepatitis = hepatitis;
-//           p.rubella = rubella;
-//           p.varcella = varcella;
-          
-          
 
           ret.resolve(p);
         });
@@ -118,7 +107,6 @@
 
   function defaultPatient(){
     return {
-      id: {value: ''},
       fname: {value: ''},
       lname: {value: ''},
       gender: {value: ''},
@@ -128,19 +116,16 @@
       systolicbp: {value: ''},
       diastolicbp: {value: ''},
       ldl: {value: ''},
-      hdl: {value: ''}
-//       measles: {value: ''},
-//       mumps: {value: ''},
-//       influenza: {value: ''},
-//       hepatitis: {value: ''},
-//       rubella: {value: ''},
-//       varcella: {value: ''}
+      hdl: {value: ''},
+      imm: {value: ''}
     };
   }
 
   function getBloodPressureValue(BPObservations, typeOfPressure) {
     var formattedBPObservations = [];
+    //console.log("BP Observations: " + BPObservations);
     BPObservations.forEach(function(observation){
+      //console.log("Each Observation: " + observation);
       var BP = observation.component.find(function(component){
         return component.code.coding.find(function(coding) {
           return coding.code == typeOfPressure;
@@ -153,6 +138,18 @@
     });
 
     return getQuantityValueAndUnit(formattedBPObservations[0]);
+  }
+  
+  
+  function displayMedication (medCodings) {
+      return getMedicationName(medCodings);
+  }
+  
+  function getMedicationName (medCodings) {
+      var coding = medCodings.find(function(c){
+      return c.system == "http://www.nlm.nih.gov/research/umls/rxnorm";
+      });
+      return coding && coding.display || "Unnamed Medication(TM)"
   }
 
   function isLeapYear(year) {
@@ -188,9 +185,9 @@
   }
 
   window.drawVisualization = function(p) {
+    console.log(p);
     $('#holder').show();
     $('#loading').hide();
-    $('#id').html(p.id);
     $('#fname').html(p.fname);
     $('#lname').html(p.lname);
     $('#gender').html(p.gender);
@@ -201,7 +198,7 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
-          
+    $('#imm').html(p.imm);
   };
 
 })(window);
