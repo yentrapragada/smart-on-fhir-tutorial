@@ -200,12 +200,12 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
-    $('#measles).html(p.measles); 
-    $('#mumps).html(p.mumps);
-    $('#influenza).html(p.influenza);
-    $('#hepatitis).html(p.hepatitis);
-    $('#rubella).html(p.rubella);
-    $('#varcella).html(p.varcella);
+    $('#measles').html(p.measles); 
+    $('#mumps').html(p.mumps);
+    $('#influenza').html(p.influenza);
+    $('#hepatitis').html(p.hepatitis);
+    $('#rubella').html(p.rubella);
+    $('#varcella').html(p.varcella);
         
   };
 
