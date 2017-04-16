@@ -22,8 +22,11 @@
                     }
                   });
         
+       // var statinRxs = smart.api.search({type: 'MedicationOrder', query: {dateWritten: '2014-05-01', name: 'statin'}});
+        
         var imm = smart.patient.api.fetchAll({
-          type: 'Immunization'       
+          type: 'Immunization',
+          query:{id: '4342011'}
         });
         
         console.log(imm);
